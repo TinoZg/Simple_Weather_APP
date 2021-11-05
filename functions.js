@@ -1,38 +1,29 @@
+async function fetchApi(url, cityName) {
+  try {
+    const response = await fetch(url);
+    if (!response.ok) {
+      const message = `An error has occured: ${response.status}.\nPossible problems:\n1. City name doesn't exists.\n2. Internet connection is down.`;
+      throw new Error(message);
+    }
+
+    const weatherData = await response.json();
+    renderData(weatherData, cityName);
+
+    getCityForm.reset();
+    city.focus();
+  } catch (error) {
+    alert(error);
+  }
+}
 const getWeather = (data) => data.list[0].weather[0].description;
 
 const getPopulation = (data) => data.city.population;
 
 const getTemperature = (data) => data.list[0].main.temp;
 
-const getSunriseTime = (data) => {
+const getTime = (data) => {
   // Time in seconds
-  const unix_timestamp = data.city.sunrise;
-
-  // Get date in miliseconds
-  const date = new Date(unix_timestamp * 1000);
-
-  let hours = date.getHours().toString();
-  if (hours.length === 1) {
-    hours = `0${hours}`;
-  }
-
-  let minutes = date.getMinutes().toString();
-  if (minutes.length === 1) {
-    minutes = `0${minutes}`;
-  }
-
-  let seconds = date.getSeconds().toString();
-  if (seconds.length === 1) {
-    seconds = `0${seconds}`;
-  }
-  const formattedTime = `${hours}:${minutes}:${seconds}`;
-
-  return formattedTime;
-};
-
-const getSunsetTime = (data) => {
-  // Time in seconds
-  const unix_timestamp = data.city.sunset;
+  const unix_timestamp = data;
 
   // Get date in miliseconds
   const date = new Date(unix_timestamp * 1000);
@@ -78,6 +69,6 @@ const renderData = (data, cityName) => {
     parseFloat(getTemperature(data))
   )} &#8451;`;
 
-  sunrise.innerHTML = getSunriseTime(data);
-  sunset.innerHTML = getSunsetTime(data);
+  sunrise.innerHTML = getTime(data.city.sunrise);
+  sunset.innerHTML = getTime(data.city.sunset);
 };
