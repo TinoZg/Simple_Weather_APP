@@ -1,4 +1,4 @@
-async function fetchApi(url, cityName) {
+export default async function fetchApi(url, cityName) {
   try {
     const response = await fetch(url);
     if (!response.ok) {
@@ -8,9 +8,6 @@ async function fetchApi(url, cityName) {
 
     const weatherData = await response.json();
     renderData(weatherData, cityName);
-
-    getCityForm.reset();
-    city.focus();
   } catch (error) {
     alert(error);
   }
